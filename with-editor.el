@@ -86,7 +86,10 @@
 (require 'tramp-sh nil t)
 
 (and (require 'async-bytecomp nil t)
-     (memq 'magit (bound-and-true-p async-bytecomp-allowed-packages))
+     (let ((pkgs (bound-and-true-p async-bytecomp-allowed-packages)))
+       (if (consp pkgs)
+           (cl-intersection '(all magit) pkgs)
+         (eq pkgs 'all)))
      (fboundp 'async-bytecomp-package-mode)
      (async-bytecomp-package-mode 1))
 
